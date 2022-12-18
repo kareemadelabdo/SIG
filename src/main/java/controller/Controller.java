@@ -31,7 +31,7 @@ import view.InvoiceGUI;
  */
 public class Controller implements ActionListener, ListSelectionListener {
 
-    private InvoiceGUI inv;
+    private final InvoiceGUI inv;
     private InvoiceDialogue invDialogue;
 
     public Controller(InvoiceGUI inv) {
@@ -41,29 +41,34 @@ public class Controller implements ActionListener, ListSelectionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("LoadMenu")) {
-            System.out.println("load menu clicked");
-            var invoicelist = chooseFile();
-            displayData(invoicelist);
-        } else if (e.getActionCommand().equals("SaveMenu")) {
-            System.out.println("save menu clicked");
-        } else if (e.getActionCommand().equals("Create New Invoice")) {
-            System.out.println("create invoice btn clicked");
-            ShowNewInvoiceDialogue();
-        } else if (e.getActionCommand().equals("Delete Invoice")) {
-            System.out.println("delete invoice btn clicked");
-            deleteInvoice();
-        } else if (e.getActionCommand().equals("Save")) {
-            System.out.println("save btn clicked");
-        } else if (e.getActionCommand().equals("Cancel")) {
-            inv.dispose();
-        } else if (e.getActionCommand().equals("CancelDialogue")) {
-            System.out.println("cancel invoice btn clicked");
-            invDialogue.dispose();
-        } else if (e.getActionCommand().equals("Add New Invoice")) {
-            System.out.println("add new item buttin field");
-            createNewInvoice();
-            invDialogue.dispose();
+        switch (e.getActionCommand()) {
+            case "LoadMenu" -> {
+                System.out.println("load menu clicked");
+                var invoicelist = chooseFile();
+                displayData(invoicelist);
+            }
+            case "SaveMenu" -> System.out.println("save menu clicked");
+            case "Create New Invoice" -> {
+                System.out.println("create invoice btn clicked");
+                ShowNewInvoiceDialogue();
+            }
+            case "Delete Invoice" -> {
+                System.out.println("delete invoice btn clicked");
+                deleteInvoice();
+            }
+            case "Save" -> System.out.println("save btn clicked");
+            case "Cancel" -> inv.dispose();
+            case "CancelDialogue" -> {
+                System.out.println("cancel invoice btn clicked");
+                invDialogue.dispose();
+            }
+            case "Add New Invoice" -> {
+                System.out.println("add new item buttin field");
+                createNewInvoice();
+                invDialogue.dispose();
+            }
+            default -> {
+            }
         }
 
     }
@@ -164,13 +169,13 @@ public class Controller implements ActionListener, ListSelectionListener {
         inv.getInvoiceDateTF().setText(null);
         inv.getCustomerNameTF().setText(null);
         inv.getInvoiceTotalTF().setText(null);
+
 //        for (int i = 0; i < invoiceLinesTable.getRowCount(); i++) {
 //            if (invoiceLinesTable.getValueAt(i, 0).equals(Id)) {
 //                ((DefaultTableModel) inv.getInvoiceItemsTable().getModel()).removeRow(i);
 //            }
 //        }
 //        var result = inv.getInvoiceItemsTable();
-
         JOptionPane.showMessageDialog(null, "Invoice deleted successfully");
     }
 
