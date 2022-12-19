@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.InvoiceHeader;
+import model.InvoiceLine;
 
 /**
  *
@@ -49,10 +50,10 @@ public class InvoiceGUI extends javax.swing.JFrame {
         createInvoiceBtn.addActionListener(controller);
         deleteInvoiceBtn = new javax.swing.JButton();
         deleteInvoiceBtn.addActionListener(controller);
-        saveBtn = new javax.swing.JButton();
-        saveBtn.addActionListener(controller);
-        cancelBtn = new javax.swing.JButton();
-        cancelBtn.addActionListener(controller);
+        createNewItemBtn = new javax.swing.JButton();
+        createNewItemBtn.addActionListener(controller);
+        deleteItemBtn = new javax.swing.JButton();
+        deleteItemBtn.addActionListener(controller);
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         invoiceNumberTF = new javax.swing.JLabel();
@@ -107,12 +108,12 @@ public class InvoiceGUI extends javax.swing.JFrame {
 
         deleteInvoiceBtn.setText("Delete Invoice");
 
-        saveBtn.setText("Save");
+        createNewItemBtn.setText("Create New Item");
 
-        cancelBtn.setText("Cancel");
-        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+        deleteItemBtn.setText("Delete Item");
+        deleteItemBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelBtnActionPerformed(evt);
+                deleteItemBtnActionPerformed(evt);
             }
         });
 
@@ -174,14 +175,14 @@ public class InvoiceGUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(113, 113, 113)
-                                .addComponent(saveBtn)
-                                .addGap(41, 41, 41)
-                                .addComponent(cancelBtn))
+                                .addGap(90, 90, 90)
+                                .addComponent(createNewItemBtn)
+                                .addGap(40, 40, 40)
+                                .addComponent(deleteItemBtn))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel4)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(87, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,8 +217,8 @@ public class InvoiceGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createInvoiceBtn)
                     .addComponent(deleteInvoiceBtn)
-                    .addComponent(cancelBtn)
-                    .addComponent(saveBtn))
+                    .addComponent(deleteItemBtn)
+                    .addComponent(createNewItemBtn))
                 .addGap(32, 32, 32))
         );
 
@@ -228,9 +229,9 @@ public class InvoiceGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_customerNameTFActionPerformed
 
-    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+    private void deleteItemBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteItemBtnActionPerformed
 //        super.dispose();
-    }//GEN-LAST:event_cancelBtnActionPerformed
+    }//GEN-LAST:event_deleteItemBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -268,12 +269,14 @@ public class InvoiceGUI extends javax.swing.JFrame {
     }
     private Controller controller = new Controller(this);
     private ArrayList<InvoiceHeader> invoiceslist;
+    private ArrayList<InvoiceLine> itemsList;
     private DefaultTableModel invModel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelBtn;
     private javax.swing.JButton createInvoiceBtn;
+    private javax.swing.JButton createNewItemBtn;
     private javax.swing.JTextField customerNameTF;
     private javax.swing.JButton deleteInvoiceBtn;
+    private javax.swing.JButton deleteItemBtn;
     private javax.swing.JTextField invoiceDateTF;
     private javax.swing.JTable invoiceItemsTable;
     private javax.swing.JLabel invoiceNumberTF;
@@ -290,12 +293,19 @@ public class InvoiceGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuItem loadMenuItem;
-    private javax.swing.JButton saveBtn;
     private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 
     public ArrayList<InvoiceHeader> getInvoiceslist() {
         return invoiceslist;
+    }
+
+    public ArrayList<InvoiceLine> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(ArrayList<InvoiceLine> itemsList) {
+        this.itemsList = itemsList;
     }
 
     public void setInvoiceslist(ArrayList<InvoiceHeader> invoiceslist) {

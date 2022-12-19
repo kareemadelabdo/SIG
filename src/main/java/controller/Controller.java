@@ -24,6 +24,7 @@ import model.InvoiceHeader;
 import model.InvoiceLine;
 import view.InvoiceDialogue;
 import view.InvoiceGUI;
+import view.NewItemDialogue;
 
 /**
  *
@@ -33,6 +34,7 @@ public class Controller implements ActionListener, ListSelectionListener {
 
     private final InvoiceGUI inv;
     private InvoiceDialogue invDialogue;
+    private NewItemDialogue invNewItem;
 
     public Controller(InvoiceGUI inv) {
 
@@ -47,7 +49,8 @@ public class Controller implements ActionListener, ListSelectionListener {
                 var invoicelist = chooseFile();
                 displayData(invoicelist);
             }
-            case "SaveMenu" -> System.out.println("save menu clicked");
+            case "SaveMenu" ->
+                System.out.println("save menu clicked");
             case "Create New Invoice" -> {
                 System.out.println("create invoice btn clicked");
                 ShowNewInvoiceDialogue();
@@ -56,16 +59,34 @@ public class Controller implements ActionListener, ListSelectionListener {
                 System.out.println("delete invoice btn clicked");
                 deleteInvoice();
             }
-            case "Save" -> System.out.println("save btn clicked");
-            case "Cancel" -> inv.dispose();
+            case "Save" ->
+                System.out.println("save btn clicked");
+
+            case "Create New Item" -> {
+                System.out.println("Create new item btn clicked");
+                ShowNewItemDialogue();
+            }
+            case "Delete Item" -> {
+                System.out.println("Delete item btn clicked");
+                deleteItem();
+            }
             case "CancelDialogue" -> {
                 System.out.println("cancel invoice btn clicked");
                 invDialogue.dispose();
             }
             case "Add New Invoice" -> {
-                System.out.println("add new item buttin field");
+                System.out.println("add new item button clicked");
                 createNewInvoice();
                 invDialogue.dispose();
+            }
+            case "Add Item" -> {
+                System.out.println("add new item button clicked");
+                createNewItem();
+                invNewItem.dispose();
+            }
+            case "Cancel Add Item" -> {
+                System.out.println("Cancel new item button clicked");
+                invNewItem.dispose();
             }
             default -> {
             }
@@ -228,7 +249,11 @@ public class Controller implements ActionListener, ListSelectionListener {
 
                 Object data[] = new Object[]{id, itemName, itemPrice, count, total};
                 invoiceItemModel.addRow(data);
+
             }
+
+            inv.setItemsList(invoiceItems);
+
 //        inv.getInvoiceItemsTable().getColumnModel().getColumn(0).setPreferredWidth(100);
             inv.getInvoiceItemsTable().setModel(invoiceItemModel);
 //           JTableHeader h = inv.getInvoiceItemsTable().getTableHeader();
@@ -250,6 +275,48 @@ public class Controller implements ActionListener, ListSelectionListener {
     private void ShowNewInvoiceDialogue() {
         invDialogue = new InvoiceDialogue(inv);
         invDialogue.setVisible(true);
+    }
+
+    private void ShowNewItemDialogue() {
+        invNewItem = new NewItemDialogue(inv);
+        invNewItem.setVisible(true);
+    }
+
+    private void deleteItem() {
+        int index = inv.getInvoiceItemsTable().getSelectedRow();
+        ((DefaultTableModel) inv.getInvoiceItemsTable().getModel()).removeRow(index);
+
+        JOptionPane.showMessageDialog(null, "Invoice item deleted successfully");
+    }
+
+    private void createNewItem() {
+        InvoiceLine newInvLine = new InvoiceLine();
+
+        String itemName = invNewItem.getNewItemNameTF().getText();
+        String itemPrice = invNewItem.getNewItemPriceTF().getText();
+        String itemCount = invNewItem.getNewItemCountTF().getText();
+
+        newInvLine.setItemName(itemName);
+        newInvLine.setItemPrice(Integer.parseInt(itemPrice));
+        newInvLine.setCount(Integer.parseInt(itemCount));
+        var itemTotal = newInvLine.getItemTotal();
+        newInvLine.setItemTotal(itemTotal);
+
+        int id = 0;
+
+        var invoiceList = inv.getItemsList();
+        for (int i = 0; i < invoiceList.size(); i++) {
+            id = invoiceList.get(i).getId();
+            break;
+        }
+        newInvLine.setId(id);
+        invoiceList.add(newInvLine);
+
+        DefaultTableModel model = (DefaultTableModel) inv.getInvoiceItemsTable().getModel();
+
+        Object data[] = new Object[]{newInvLine.getId(), newInvLine.getItemName(), newInvLine.getItemPrice(), newInvLine.getCount(), newInvLine.getItemTotal()};
+        model.addRow(data);
+
     }
 
 }
