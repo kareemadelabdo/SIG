@@ -112,11 +112,11 @@ public class Controller implements ActionListener, ListSelectionListener {
 
         newInvoice.setCustomerName(customerName);
         newInvoice.setDatecreated(date);
-        newInvoice.setId(maxID);
+        newInvoice.setId(maxID + 1);
 
         invoiceList.add(newInvoice);
         DefaultTableModel model = (DefaultTableModel) inv.getInvoiceTable().getModel();
-        Object data[] = new Object[]{newInvoice.getId() + 1, newInvoice.getDatecreated(), newInvoice.getCustomerName(), newInvoice.getItems()};
+        Object data[] = new Object[]{newInvoice.getId(), newInvoice.getDatecreated(), newInvoice.getCustomerName(), newInvoice.getItems()};
         model.addRow(data);
     }
 
@@ -190,6 +190,12 @@ public class Controller implements ActionListener, ListSelectionListener {
         inv.getInvoiceDateTF().setText(null);
         inv.getCustomerNameTF().setText(null);
         inv.getInvoiceTotalTF().setText(null);
+
+        InvoiceHeader invoiceHeader = inv.getInvoiceslist().get(index);
+        var listBefore = inv.getInvoiceslist();
+        inv.getInvoiceslist().remove(invoiceHeader);
+
+        var listAfter = inv.getInvoiceslist();
 
 //        for (int i = 0; i < invoiceLinesTable.getRowCount(); i++) {
 //            if (invoiceLinesTable.getValueAt(i, 0).equals(Id)) {
@@ -285,6 +291,11 @@ public class Controller implements ActionListener, ListSelectionListener {
     private void deleteItem() {
         int index = inv.getInvoiceItemsTable().getSelectedRow();
         ((DefaultTableModel) inv.getInvoiceItemsTable().getModel()).removeRow(index);
+        InvoiceLine invoiceLine = inv.getItemsList().get(index);
+        var listBefore = inv.getItemsList();
+        inv.getItemsList().remove(invoiceLine);
+
+        var listAfter = inv.getItemsList();
 
         JOptionPane.showMessageDialog(null, "Invoice item deleted successfully");
     }
@@ -318,5 +329,4 @@ public class Controller implements ActionListener, ListSelectionListener {
         model.addRow(data);
 
     }
-
 }
