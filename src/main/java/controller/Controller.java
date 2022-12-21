@@ -7,7 +7,9 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -49,8 +52,10 @@ public class Controller implements ActionListener, ListSelectionListener {
                 var invoicelist = chooseFile();
                 displayData(invoicelist);
             }
-            case "SaveMenu" ->
+            case "SaveMenu" -> {
                 System.out.println("save menu clicked");
+                saveFile();
+            }
             case "Create New Invoice" -> {
                 System.out.println("create invoice btn clicked");
                 ShowNewInvoiceDialogue();
@@ -59,8 +64,6 @@ public class Controller implements ActionListener, ListSelectionListener {
                 System.out.println("delete invoice btn clicked");
                 deleteInvoice();
             }
-            case "Save" ->
-                System.out.println("save btn clicked");
 
             case "Create New Item" -> {
                 System.out.println("Create new item btn clicked");
@@ -294,8 +297,9 @@ public class Controller implements ActionListener, ListSelectionListener {
         InvoiceLine invoiceLine = inv.getItemsList().get(index);
         var listBefore = inv.getItemsList();
         inv.getItemsList().remove(invoiceLine);
-
-        var listAfter = inv.getItemsList();
+        displayData(inv.getInvoiceslist());
+        
+//        var listAfter = inv.getItemsList();
 
         JOptionPane.showMessageDialog(null, "Invoice item deleted successfully");
     }
@@ -328,5 +332,87 @@ public class Controller implements ActionListener, ListSelectionListener {
         Object data[] = new Object[]{newInvLine.getId(), newInvLine.getItemName(), newInvLine.getItemPrice(), newInvLine.getCount(), newInvLine.getItemTotal()};
         model.addRow(data);
 
+    }
+
+    private void saveFile() {
+
+        var invoiceList = inv.getInvoiceslist();
+        String header = "";
+        String items = "";
+        for (int i = 0; i < invoiceList.size(); i++) {
+            header += invoiceList.get(i).getId() + "," + invoiceList.get(i).getDatecreated() + "," + invoiceList.get(i).getCustomerName() + "\n";
+            for (int j = 0; j < invoiceList.get(i).getItems().size(); j++) {
+                items += invoiceList.get(i).getItems().get(j).getId()
+                        + "," + invoiceList.get(i).getItems().get(j).getItemName()
+                        + "," + invoiceList.get(i).getItems().get(j).getItemPrice()
+                        + "," + invoiceList.get(i).getItems().get(j).getCount() + "\n";
+            }
+        }
+
+//        
+        System.out.println(header);
+        System.out.println(items);
+
+        JFileChooser jfc = new JFileChooser();
+        var result = jfc.showSaveDialog(inv);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            FileWriter headerFW = null;
+            FileWriter lineFW = null;
+            try {
+                File newHeaderFile = jfc.getSelectedFile();
+                headerFW = new FileWriter(newHeaderFile);
+                var result2 = jfc.showSaveDialog(inv);
+                if (result2 == JFileChooser.APPROVE_OPTION) {
+                    File newLineFile = jfc.getSelectedFile();
+                    lineFW = new FileWriter(newLineFile);
+                    lineFW.write(items);
+                    lineFW.flush();
+                    lineFW.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    headerFW.write(header);
+                    headerFW.flush();
+                    headerFW.close();
+                    JOptionPane.showMessageDialog(null, "Files Saved Successfully");
+                } catch (IOException ex) {
+                    Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+
+//        try {
+//            File invoiceHeader = new File("H:\\InvoiceHeader - Copy.txt");
+//            if (invoiceHeader.createNewFile()) {
+//                System.out.println("File created: " + invoiceHeader.getName());
+//            } else {
+//                System.out.println("File already exists.");
+//            }
+//            File invoiceLines = new File("H:\\InvoiceLines - Copy.txt");
+//            if (invoiceLines.createNewFile()) {
+//                System.out.println("File created: " + invoiceLines.getName());
+//            } else {
+//                System.out.println("File already exists.");
+//            }
+//            PrintWriter pw = new PrintWriter(invoiceHeader);
+//            PrintWriter pw2 = new PrintWriter(invoiceLines);
+//            new FileWriter("H:\\InvoiceHeader - Copy.txt").close();
+//            var invoiceList = inv.getInvoiceslist();
+//
+//            for (int i = 0; i < invoiceList.size(); i++) {
+////                fWriter.write(invoiceList.get(i).getId() + "," + invoiceList.get(i).getDatecreated() + "," + invoiceList.get(i).getCustomerName());
+//                System.out.println(invoiceList.get(i).getId() + "," + invoiceList.get(i).getDatecreated() + "," + invoiceList.get(i).getCustomerName());
+//            }
+//
+//            var x = 1;
+//        } catch (IOException e) {
+//            System.out.println("An error occurred while writing to files");
+//            e.printStackTrace();
+//        }
     }
 }
