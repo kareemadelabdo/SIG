@@ -55,6 +55,9 @@ public class InvoiceHeader {
 
     public int getTotal() {
         int totalPrice = 0;
+        if (items == null) {
+            return 0;
+        }
         for (int i = 0; i < items.size(); i++) {
             totalPrice = totalPrice + items.get(i).getItemTotal();
         }

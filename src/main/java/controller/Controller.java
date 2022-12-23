@@ -116,10 +116,11 @@ public class Controller implements ActionListener, ListSelectionListener {
         newInvoice.setCustomerName(customerName);
         newInvoice.setDatecreated(date);
         newInvoice.setId(maxID + 1);
+//        newInvoice.setTotal(0);
 
         invoiceList.add(newInvoice);
         DefaultTableModel model = (DefaultTableModel) inv.getInvoiceTable().getModel();
-        Object data[] = new Object[]{newInvoice.getId(), newInvoice.getDatecreated(), newInvoice.getCustomerName(), newInvoice.getItems()};
+        Object data[] = new Object[]{newInvoice.getId(), newInvoice.getDatecreated(), newInvoice.getCustomerName(), newInvoice.getTotal()};
         model.addRow(data);
     }
 
@@ -298,9 +299,8 @@ public class Controller implements ActionListener, ListSelectionListener {
         var listBefore = inv.getItemsList();
         inv.getItemsList().remove(invoiceLine);
         displayData(inv.getInvoiceslist());
-        
-//        var listAfter = inv.getItemsList();
 
+//        var listAfter = inv.getItemsList();
         JOptionPane.showMessageDialog(null, "Invoice item deleted successfully");
     }
 
@@ -316,16 +316,22 @@ public class Controller implements ActionListener, ListSelectionListener {
         newInvLine.setCount(Integer.parseInt(itemCount));
         var itemTotal = newInvLine.getItemTotal();
         newInvLine.setItemTotal(itemTotal);
-
+        var index = inv.getInvoiceTable().getSelectedRow();
         int id = 0;
 
         var invoiceList = inv.getItemsList();
-        for (int i = 0; i < invoiceList.size(); i++) {
-            id = invoiceList.get(i).getId();
-            break;
-        }
+
+        InvoiceHeader selectedRow = inv.getInvoiceslist().get(index);
+        id = selectedRow.getId();
+//        for (int i = 0; i < invoiceList.size(); i++) {
+//            id = invoiceList.get(i).getId();
+//            break;
+//        }
         newInvLine.setId(id);
         invoiceList.add(newInvLine);
+
+        var x = inv.getInvoiceslist();
+        displayData(x);
 
         DefaultTableModel model = (DefaultTableModel) inv.getInvoiceItemsTable().getModel();
 
